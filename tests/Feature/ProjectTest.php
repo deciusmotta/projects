@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Requests\ProjectRequest;
 use App\Project;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -45,5 +46,18 @@ class ProjectTest extends TestCase
         $this->delete(route('project.destroy', $project['id']))
             ->assertStatus(200)
             ->assertJson([]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_listed()
+    {
+        $projects = factory(Project::class, 3)->create()->toArray();
+        $this->get(route('project.index'))
+            ->assertStatus(200)
+            ->assertSee($projects[0]['name'])
+            ->assertSee($projects[1]['name'])
+            ->assertSee($projects[2]['name']);
     }
 }

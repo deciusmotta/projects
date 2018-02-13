@@ -3,12 +3,14 @@
 namespace Tests\Feature;
 
 use App\Project;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProjectTest extends TestCase
 {
+    use DatabaseMigrations;
     /**
      * @test
      */

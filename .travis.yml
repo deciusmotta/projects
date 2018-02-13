@@ -8,4 +8,4 @@ before_script:
 - php artisan key:generate
 
 script:
-- vendor/bin/phpunit
+- phpunit

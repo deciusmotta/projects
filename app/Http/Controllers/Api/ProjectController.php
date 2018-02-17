@@ -19,7 +19,7 @@ class ProjectController extends Controller
         $where = [];
         $sortBy = 'id';
         $direction = 'asc';
-        $perPage = $request->perPage;
+        $perPage = $request->perPage == -1 ? Project::count() : $request->perPage;
         
         if(!empty($request->search)){
             $where = ['name','like','%'.$request->search.'%'];            
@@ -32,7 +32,6 @@ class ProjectController extends Controller
         if(!empty($request->descending)){
             $direction = $request->descending == "true" ? 'desc' : 'asc';
         }
-        
         if($where)
             return Project::where([$where])->orderBy($sortBy, $direction)->paginate($perPage);
 

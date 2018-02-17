@@ -198,12 +198,17 @@
                 
             },
             updateItem (updatedItem) {
-                this.$http.put('/project/' + updatedItem.id, {                        
+                this.$http.put('/project/' + updatedItem.id, {
                         'name': updatedItem.name,
                         'description': updatedItem.description                    
                     }).then( data => {
                         console.log(data)
-                        this.items.push(data.data)
+                    const { sortBy, descending, page, rowsPerPage } = this.pagination
+                    this.getList(this.search,
+                        sortBy,
+                        page,
+                        rowsPerPage,
+                        this.pagination.descending)
                         this.color = 'success'
                         this.message = "Item atualizado com sucesso"
                         this.snackbar = true

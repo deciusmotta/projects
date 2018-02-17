@@ -14,9 +14,28 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Project::paginate();
+        $where = [];
+        $sortBy = 'id';
+        $direction = 'asc';
+        
+        if(!empty($request->search)){
+            $where = ['name','like','%'.$request->search.'%'];            
+        }
+
+        if(!empty($request->sortBy)){
+            $sortBy = $request->sortBy;
+        }
+
+        if(!empty($request->descending)){
+            $direction = $request->descending == "true" ? 'desc' : 'asc';
+        }
+        
+        if($where)
+            return Project::where([$where])->orderBy($sortBy, $direction)->paginate();
+
+        return Project::orderBy($sortBy, $direction)->paginate();
     }
 
     /**

@@ -1,7 +1,7 @@
 <template>
     <div>
-    <v-dialog v-model="dialog" max-width="500px">
-      <v-btn color="primary" dark slot="activator" class="mb-2">New Item</v-btn>
+    <v-dialog v-model="dialog" max-width="500px" fullscreen transition="dialog-bottom-transition" :overlay="false">
+      <v-btn color="primary" dark slot="activator" class="mb-2">Novo Projeto</v-btn>
       <v-card>
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
@@ -9,28 +9,21 @@
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Dessert name" v-model="editedItem.name"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Calories" v-model="editedItem.calories"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Fat (g)" v-model="editedItem.fat"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Carbs (g)" v-model="editedItem.carbs"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Protein (g)" v-model="editedItem.protein"></v-text-field>
-              </v-flex>
+              <v-flex xs12 sm12 md12>
+                <v-text-field label="Nome" v-model="editedItem.name"></v-text-field>
+              </v-flex>              
+            </v-layout>
+            <v-layout row>
+                <v-flex xs12 sm12 md12>
+                    <v-text-field label="Descrição" v-model="editedItem.description" textarea></v-text-field>
+                </v-flex>              
             </v-layout>
           </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-          <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+          <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+          <v-btn color="blue darken-1" flat @click.native="save">Salvar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -47,9 +40,13 @@
         ></v-text-field>
         </v-card-title>
         <v-data-table
-        :headers="headers"
-        :items="items"
-        :search="search"
+            :headers="headers"
+            :items="items"
+            :search="search"
+            :pagination.sync="pagination"
+            :total-items="totalItems"
+            :loading="loading"
+            :must-sort=mustSort
         >
         <template slot="items" slot-scope="props">
             <td>{{ props.item.id }}</td>
@@ -68,6 +65,28 @@
         </v-alert>
         </v-data-table>
     </v-card>
+    <v-layout row justify-center>
+        <v-btn color="primary" dark @click.native.stop="confirmation = true">Open Dialog</v-btn>
+        <v-dialog v-model="confirmation" max-width="290">
+        <v-card>
+            <v-card-title class="headline">Excluir Item?</v-card-title>
+            <v-card-text> Esta ação não poderá ser disfeita.</v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat="flat" @click.native="confirmation = false">Não</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click.native="destroyItem">Sim</v-btn>
+            </v-card-actions>
+        </v-card>
+        </v-dialog>
+    </v-layout>
+    <v-snackbar
+      :timeout="timeout"
+      :color="color"          
+      v-model="snackbar"
+    >
+      {{ message }}
+      <v-btn dark flat @click.native="snackbar = false"><v-icon color="teal">close</v-icon></v-btn>
+    </v-snackbar>
     </div>
 </template>
 
@@ -81,40 +100,55 @@
         data() {
             return {
                 items: [],
-                loading: false,
+                message: '',
+                editedIndex: -1,
+                loading: true,
                 search: '',
+                pagination: {},
+                totalItems: 0,
+                mustSort: true,
+                color: '',
+                timeout: 3000,
+                snackbar: false,
+                confirmation: false,
+                itemToBeDeleted: 0,
+                itemToBeDeletedIndex: 0,
                 headers: [
                     { text: 'Id', value: 'id' },                    
                     { text: 'Nome', value: 'name'},
+                    { text: 'Ações', value: '', sortable: false},
                 ],
                 dialog: false,
                 editedItem: {
+                    id: 0,
                     name: '',
-                    calories: 0,
-                    fat: 0,
-                    carbs: 0,
-                    protein: 0
+                    description: ''
                 },
                 defaultItem: {
                     name: '',
-                    calories: 0,
-                    fat: 0,
-                    carbs: 0,
-                    protein: 0
+                    description: ''
                 }
             }
         },
         mounted() {
-            this.loading = true
-            this.getList()
+            
         },
         methods: {
             getList() {
-                this.$http.get('/project')
-                    .then(this.fillList)
+                if(this.pagination.sortBy != undefined){
+                    this.$http.get('/project', {
+                        params: {
+                            'search': this.search,
+                            'sortBy': this.pagination.sortBy,
+                            'descending': this.pagination.descending
+                        }
+                    }).then(this.fillList)
+                }                
             },
             fillList(list) {
+                this.loading = true
                 Vue.set(this, 'items', list.data.data)
+                Vue.set(this, 'totalItems', list.data.total)
                 this.loading = false
             },
             editItem (item) {
@@ -124,32 +158,84 @@
             },
             deleteItem (item) {
                 const index = this.items.indexOf(item)
-                confirm('Are you sure you want to delete this item?') && this.items.splice(index, 1)
+                this.itemToBeDeleted = this.items[index].id
+                this.itemToBeDeletedIndex = index
+                this.confirmation = true
+                
+                /*confirm('Are you sure you want to delete this item?') && this.items.splice(index, 1)*/
             },
             close () {
                 this.dialog = false
                 setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
+                    this.editedItem = Object.assign({}, this.defaultItem)
+                    this.editedIndex = -1
                 }, 300)
             },
             save () {
                 if (this.editedIndex > -1) {
-                Object.assign(this.items[this.editedIndex], this.editedItem)
-                } else {
-                this.items.push(this.editedItem)
+                    Object.assign(this.items[this.editedIndex], this.editedItem)
+                    this.updateItem(this.editedItem)
+                } else {                    
+                    this.newItem(this.editedItem)
                 }
                 this.close()
+            },
+            newItem (newItem) {
+                this.$http.post('/project', {                        
+                        'name': newItem.name,
+                        'description': newItem.description                    
+                    }).then( data => {
+                        console.log(data)
+                        this.items.push(data.data)
+                        this.color = 'success'
+                        this.message = "Item salvo com sucesso"
+                        this.snackbar = true
+                    })
+                
+            },
+            updateItem (updatedItem) {
+                this.$http.put('/project/' + updatedItem.id, {                        
+                        'name': updatedItem.name,
+                        'description': updatedItem.description                    
+                    }).then( data => {
+                        console.log(data)
+                        this.items.push(data.data)
+                        this.color = 'success'
+                        this.message = "Item atualizado com sucesso"
+                        this.snackbar = true
+                    })
+            },
+            destroyItem () {
+                this.$http.delete('/project/' + this.itemToBeDeleted).then( data => {
+                        console.log(data)
+                        //this.items.push(data.data)
+                        this.color = 'success'
+                        this.message = "Item deletado com sucesso"
+                        this.snackbar = true
+                        this.items.splice(this.itemToBeDeletedIndex, 1)
+                        
+                        this.itemToBeDeleted = 0
+                        this.itemToBeDeletedIndex = 0
+                        this.confirmation = false
+                    })
+                
+                
             }
         },
         computed: {
             formTitle () {
-                return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+                return this.editedIndex === -1 ? 'Novo' : 'Editar'
             }
         },
         watch: {
             dialog (val) {
                 val || this.close()
+            },
+            pagination: {
+                handler () {
+                    this.getList()                    
+                },
+                deep: true
             }
         },
     }

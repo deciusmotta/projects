@@ -91,12 +91,10 @@
 </template>
 
 <script>
-    import Loading from '../Loading'
     import Vue from 'vue'
 
     export default {
         name: 'project-list',
-        components: {Loading},
         data() {
             return {
                 items: [],
@@ -134,16 +132,22 @@
             
         },
         methods: {
-            getList() {
+            getList(search, sortBy, page, rowsPerPage, descending) {
                 if(this.pagination.sortBy != undefined){
                     this.$http.get('/project', {
                         params: {
-                            'search': this.search,
-                            'sortBy': this.pagination.sortBy,
-                            'descending': this.pagination.descending
+                            'search':search,
+                            'sortBy': sortBy,
+                            'descending': descending,
+                            'page': page,
+                            'perPage': rowsPerPage
                         }
-                    }).then(this.fillList)
+                    }).then(this.fillList).catch(this.catchLoad)
                 }                
+            },
+            catchLoad (error) {
+                console.error(error)
+                this.loading = false
             },
             fillList(list) {
                 this.loading = true
@@ -233,7 +237,12 @@
             },
             pagination: {
                 handler () {
-                    this.getList()                    
+                    const { sortBy, descending, page, rowsPerPage } = this.pagination
+                    this.getList(this.search,
+                         sortBy,
+                         page,
+                         rowsPerPage,
+                         this.pagination.descending)
                 },
                 deep: true
             }

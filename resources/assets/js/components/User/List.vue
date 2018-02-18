@@ -1,9 +1,9 @@
 <template>
   <crud 
-    name="Projetos" 
+    name="Usuários" 
     :headers="headers" 
-    endPoint='/project' 
-    newItemText="Novo Projeto"
+    endPoint='/user' 
+    newItemText="Novo Usuário"
     :fields="fields"
     :editedItem="editedItem"
     :defaultItem="defaultItem"
@@ -20,20 +20,24 @@
                 headers: [
                     { text: 'Id', value: 'id' },                    
                     { text: 'Nome', value: 'name'},
+                    { text: 'E-mail', value: 'email'},
                     { text: 'Ações', value: '', sortable: false},
                 ],
                 fields: [
                     {name: 'id', label: 'Id', type: 'Number', showInTable: true}, 
-                    {name: 'name', label: 'Nome', type: 'String', showInTable: true, required: true},
-                    {name: 'description', label: 'Descrição', type: 'TextArea', showInTable: false, required: true},
+                    {name: 'name', label: 'Nome', type: 'String', showInTable: true},
+                    {name: 'email', label: 'E-mail', type: 'String', showInTable: true},
+                    {name: 'password', label: 'Senha', type: 'String', showInTable: false},
                 ],
                 editedItem: {
                     name: '',
-                    description: ''
+                    email: '',
+                    password: '',
                 },
                 defaultItem: {
                     name: '',
-                    description: ''
+                    email: '',
+                    password: '',
                 }
             }
         },

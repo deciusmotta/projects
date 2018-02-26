@@ -9,10 +9,17 @@ Em desenvolvimento, NÃO USE EM PRODUÇÃO
 Este projeto tem o intuito de prover uma ferramenta de planejamento e gestão de demandas de TI. Seguindo as boas práticas propostas pelo ITIL o PlanDesk entrega um catálogo de demandas, que podem ser criadas manualmente ou importadas de ferramentas de mercado como Github, Gitlab e Bitbucket, que pode ser gerenciado nas dimensões de tempo de recursos.
 
 A ideia do PlanDesk é criar um quado de planejamento para um projeto que pode ter vários repositórios. Para isso você pode contar com ferramentas como:
+
 - criação de tickets pelos usuários. A finalidade desse recurso é proporcionar a experiência de help-desk para os usuários que tem algum papel junto à(s) ferramenta(s) gerenciada(s) pelo PlanDesk;
+
 - quadro kanbam para controle das tarefas. Com o painel kanbam é possível ver facilmente o que está separado para ser feito, em andamento, pronto para entrega ou qualquer outro estado que seja válido nos processos internos e gerenciar sprints ou milestones;
-- importaço de issues. Com este recurso você pode vincular ao seu projeto vários repositórios, o que em termos práticos quer dizer que você gerenciar a construção e manutenção de várias ferramentas como se fossem uma;
+
+- sincronização de issues. Com este recurso você pode vincular ao seu projeto vários repositórios, o que em termos práticos quer dizer que você gerenciar a construção e manutenção de várias ferramentas como se fossem uma;
+
 - visualização de recursos em formato de calendário. Graças a esse recursos é possível ver quem está fazendo o que em que dia no formato de calendário;
+
+- controle de níveis de acesso avançado. Com a ferramenta de controle de acesso avançado é possível determinar claramente o que cada usuário pode fazer dentro do sistema, permitindo que sejam criados perfis que podem editar, excluir ou apenas reportar demandas;
+
 - predição de prazos. Utilizando as ferramentas de tags é possível fazer com que a ferramenta conheça os prazos médios de cada demanda e faça sugestes de prazos para as novas atividades. Se você marcar daus tarefas com a tag `Criar Cadastro` e demorar 4 horas para completar uma e 2 horas para completar a outra o sistema irá oferecer como custo 3 horas a próxima tarefa.
 
 ## Como instalar

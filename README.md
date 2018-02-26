@@ -1,5 +1,36 @@
-# project-manager
-
 [![Build Status](https://travis-ci.org/brasil-php/project-manager.svg?branch=master)](https://travis-ci.org/brasil-php/project-manager)
 
-## In development, DO NOT USE IN PRODUCTION
+```
+Em desenvolvimento, NÃO USE EM PRODUÇÃO
+```
+
+# PlanDesk
+
+Este projeto tem o intuito de prover uma ferramenta de planejamento e gestão de demandas de TI. Seguindo as boas práticas propostas pelo ITIL o PlanDesk entrega um catálogo de demandas, que podem ser criadas manualmente ou importadas de ferramentas de mercado como Github, Gitlab e Bitbucket, que pode ser gerenciado nas dimensões de tempo de recursos.
+
+A ideia do PlanDesk é criar um quado de planejamento para um projeto que pode ter vários repositórios. Para isso você pode contar com ferramentas como:
+- criação de tickets pelos usuários. A finalidade desse recurso é proporcionar a experiência de help-desk para os usuários que tem algum papel junto à(s) ferramenta(s) gerenciada(s) pelo PlanDesk;
+- quadro kanbam para controle das tarefas. Com o painel kanbam é possível ver facilmente o que está separado para ser feito, em andamento, pronto para entrega ou qualquer outro estado que seja válido nos processos internos e gerenciar sprints ou milestones;
+- importaço de issues. Com este recurso você pode vincular ao seu projeto vários repositórios, o que em termos práticos quer dizer que você gerenciar a construção e manutenção de várias ferramentas como se fossem uma;
+- visualização de recursos em formato de calendário. Graças a esse recursos é possível ver quem está fazendo o que em que dia no formato de calendário;
+- predição de prazos. Utilizando as ferramentas de tags é possível fazer com que a ferramenta conheça os prazos médios de cada demanda e faça sugestes de prazos para as novas atividades. Se você marcar daus tarefas com a tag `Criar Cadastro` e demorar 4 horas para completar uma e 2 horas para completar a outra o sistema irá oferecer como custo 3 horas a próxima tarefa.
+
+## Como instalar
+
+1. Baixe ou clone este repositório.
+2. Copie o arquivo .env.example para .env (`cp .env.example .env`)
+3. Instale as dependências (`composer install`)
+4. Gere a app key (`php artisan key:generate`)
+5. Configure o banco de dados no arquivo .env
+6. Rode migrations e seeders (`php artisan migrate && php artisan db:seed`)
+7. Inicie o servidor (`php artisan serve`) e aproveite
+
+## Como contribuir
+
+1. Faça um fork deste repositório
+2. Prepare as alterações no seu repositório (gerado no passo 1)
+3. Envie um pull request
+
+Você pode consultar o que precisa ser feito, bugs encontrados ou reportar bugs usando as issues:
+
+[Clique aqui para ir para as issues](https://github.com/brasil-php/project-manager/issues)

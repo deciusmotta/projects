@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/brasil-php/project-manager.svg?branch=master)](https://travis-ci.org/brasil-php/project-manager)
 
 ```
-Under development, DO NOT USE IN PRODUCTION
+WIP, DO NOT USE IN PRODUCTION
 ```
 
 # PlanDesk

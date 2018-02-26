@@ -1,4 +1,4 @@
-[! [Build Status] (https://travis-ci.org/brasil-php/project-manager) (https://travis-ci.org/brasil-php/project-manager)
+[![Build Status](https://travis-ci.org/brasil-php/project-manager.svg?branch=master)](https://travis-ci.org/brasil-php/project-manager)
 
 ```
 Under development, DO NOT USE IN PRODUCTION
@@ -40,4 +40,5 @@ The idea of PlanDesk is to create a planning board for a project that can have m
 
 You can check what needs to be done, bugs found or report bugs using problems:
 
-[Click here to go to problems] (https://github.com/brasil-php/project-manager/issues)
+[Click here to go to issues](https://github.com/brasil-php/project-manager/issues)
+

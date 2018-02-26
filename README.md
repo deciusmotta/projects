@@ -6,7 +6,7 @@ Em desenvolvimento, NÃO USE EM PRODUÇÃO
 
 # PlanDesk
 
-Este projeto tem o intuito de prover uma ferramenta de planejamento e gestão de demandas de TI. Seguindo as boas práticas propostas pelo ITIL o PlanDesk entrega um catálogo de demandas, que podem ser criadas manualmente ou importadas de ferramentas de mercado como Github, Gitlab e Bitbucket, que pode ser gerenciado nas dimensões de tempo de recursos.
+Este projeto tem o intuito de prover uma ferramenta de planejamento e gestão de demandas de TI. Seguindo as boas práticas propostas pelo ITIL o PlanDesk entrega um catálogo de demandas, que podem ser criadas manualmente ou importadas de ferramentas de mercado como Github, Gitlab e Bitbucket, que pode ser gerenciado em várias dimensões.
 
 A ideia do PlanDesk é criar um quado de planejamento para um projeto que pode ter vários repositórios. Para isso você pode contar com ferramentas como:
 

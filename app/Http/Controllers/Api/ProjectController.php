@@ -16,7 +16,6 @@ class ProjectController extends Controller
      */
     public function index(Request $request, ProjectFilter $filter)
     {
-        $where = [];
         $sortBy = 'id';
         $direction = 'asc';
         $perPage = $request->perPage == -1 ? Project::count() : $request->perPage;

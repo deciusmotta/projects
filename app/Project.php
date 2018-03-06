@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Filters\ProjectFilter;
 class Project extends Model
 {
     protected $fillable = ['name','description'];
@@ -21,5 +21,10 @@ class Project extends Model
     public function repos()
     {
         return $this->hasMany(Repo::class);
+    }
+
+    public function scopeFilter($query, ProjectFilter $filters)
+    {
+        return $filters->apply($query);
     }
 }

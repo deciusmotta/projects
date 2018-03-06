@@ -6,7 +6,7 @@ use App\Http\Requests\ProjectRequest;
 use App\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\Filters\ProjectFilter;
 class ProjectController extends Controller
 {
     /**
@@ -14,16 +14,14 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, ProjectFilter $filter)
     {
         $where = [];
         $sortBy = 'id';
         $direction = 'asc';
         $perPage = $request->perPage == -1 ? Project::count() : $request->perPage;
         
-        if(!empty($request->search)){
-            $where = ['name','like','%'.$request->search.'%'];            
-        }
+
 
         if(!empty($request->sortBy)){
             $sortBy = $request->sortBy;
@@ -32,8 +30,8 @@ class ProjectController extends Controller
         if(!empty($request->descending)){
             $direction = $request->descending == "true" ? 'desc' : 'asc';
         }
-        if($where)
-            return Project::where([$where])->orderBy($sortBy, $direction)->paginate($perPage);
+        if(request()->exists('search'))
+            return Project::filter($filter)->orderBy($sortBy, $direction)->paginate($perPage);
 
         return Project::orderBy($sortBy, $direction)->paginate($perPage);
     }

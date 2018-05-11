@@ -1,4 +1,4 @@
 let config = {}
-config.baseURL = 'http://localhost:8000/api/v1'
+config.baseURL = 'http://localhost:80/api/v1'
 
 export default config

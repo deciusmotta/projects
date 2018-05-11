@@ -113,8 +113,10 @@
                 snackbar: false,
                 confirmation: false,
                 itemToBeDeleted: 0,
-                itemToBeDeletedIndex: 0,                
-                dialog: false                
+                itemToBeDeletedIndex: 0,
+                dialog: false,
+                editedItem: {},
+                defaultItem: {}
             }
         },
         props: {
@@ -133,15 +135,16 @@
           fields: {
             type: Array
           },
-          editedItem: {
+          editedItemProp: {
             type: Object
           },
-          defaultItem: {
+          defaultItemProp: {
             type: Object
           }
         },
         mounted() {
-            
+            this.editedItem = this.editedItemProp
+            this.defaultItem = this.defaultItemProp
         },
         methods: {
             getList(search, sortBy, page, rowsPerPage, descending) {
@@ -222,7 +225,7 @@
                     })
             },
             destroyItem () {
-                this.$http.delete(this.endPoint + this.itemToBeDeleted).then( data => {
+                this.$http.delete(this.endPoint + '/' + this.itemToBeDeleted).then( data => {
                         console.log(data)
                         //this.items.push(data.data)
                         this.color = 'success'

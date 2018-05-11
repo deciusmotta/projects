@@ -1,14 +1,14 @@
 <template>
-  <crud 
-    name="Projetos" 
-    :headers="headers" 
-    endPoint='/project' 
-    newItemText="Novo Projeto"
-    :fields="fields"
-    :editedItem="editedItem"
-    :defaultItem="defaultItem"
-    >
-    </crud>
+    <crud 
+        name="Projetos" 
+        :headers="headers" 
+        endPoint='/project' 
+        newItemText="Novo Projeto"
+        :fields="fields"
+        :editedItemProp="editedItem"
+        :defaultItemProp="defaultItem"
+        >
+        </crud>
 </template>
 
 <script>

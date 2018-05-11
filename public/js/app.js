@@ -66608,7 +66608,7 @@ if (false) {
 
 "use strict";
 var config = {};
-config.baseURL = 'http://localhost/api/v1';
+config.baseURL = 'http://localhost:8000/api/v1';
 
 /* harmony default export */ __webpack_exports__["a"] = (config);
 

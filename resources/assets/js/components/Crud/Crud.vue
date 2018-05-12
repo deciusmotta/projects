@@ -16,6 +16,16 @@
               <v-flex xs12 sm12 md12 v-if="field.type == 'TextArea'">
                 <v-text-field box :required="field.required" :label="field.label" v-model="editedItem[field.name]" textarea></v-text-field>
               </v-flex>
+              <v-flex xs12 sm12 md12 v-if="field.type == 'Password'">
+                <v-text-field box 
+                :required="field.required" 
+                :label="field.label" 
+                v-model="editedItem[field.name]"
+                :append-icon="password ? 'visibility' : 'visibility_off'"
+                :append-icon-cb="() => (password = !password)"
+                :type="password ? 'password' : 'text'"
+                ></v-text-field>
+              </v-flex>
             </v-layout>
           
           </v-container>
@@ -85,9 +95,9 @@
     <v-snackbar
       :timeout="timeout"
       :color="color"          
-      v-model="snackbar"
+      v-model="snackbar"      
     >
-      {{ message }}
+      <span v-for="message in messages">{{message}}<br></span>
       <v-btn dark flat @click.native="snackbar = false"><v-icon color="teal">close</v-icon></v-btn>
     </v-snackbar>
     </div>
@@ -101,7 +111,7 @@
         data() {
             return {
                 items: [],
-                message: '',
+                messages: [],
                 editedIndex: -1,
                 loading: true,
                 search: '',
@@ -109,14 +119,15 @@
                 totalItems: 0,
                 mustSort: true,
                 color: '',
-                timeout: 3000,
+                timeout: 6000,
                 snackbar: false,
                 confirmation: false,
                 itemToBeDeleted: 0,
                 itemToBeDeletedIndex: 0,
                 dialog: false,
                 editedItem: {},
-                defaultItem: {}
+                defaultItem: {},
+                password: true
             }
         },
         props: {
@@ -197,21 +208,36 @@
                 } else {                    
                     this.createItem(this.editedItem)
                 }
-                this.close()
+                
             },
             createItem (newItem) {
                 console.log(newItem)
-                this.$http.post(this.endPoint, newItem).then( data => {
+                this.$http.post(this.endPoint, newItem)
+                .then( data => {
                         console.log(data)
                         this.items.push(data.data)
                         this.color = 'success'
-                        this.message = "Item salvo com sucesso"
+                        this.messages = [];
+                        this.messages.push("Item salvo com sucesso")
                         this.snackbar = true
+                        this.close()
                     })
+                .catch( errors => {
+                    let errorList = errors.response.data.errors                                
+                        this.messages = [];
+                        for(let error in errorList){
+                        
+                            this.color = 'error'
+                            this.messages.push(errorList[error][0])
+                            this.snackbar = true
+                        }
+                })
                 
             },
             updateItem (updatedItem) {
-                this.$http.put(this.endPoint + '/' + updatedItem.id, updatedItem).then( data => {
+                this.$http.put(this.endPoint + '/' + updatedItem.id, updatedItem)
+                
+                .then( data => {
                         console.log(data)
                     const { sortBy, descending, page, rowsPerPage } = this.pagination
                     this.getList(this.search,
@@ -220,16 +246,31 @@
                         rowsPerPage,
                         this.pagination.descending)
                         this.color = 'success'
-                        this.message = "Item atualizado com sucesso"
+
+                        this.messages = [];
+                        this.messages.push("Item atualizado com sucesso")
                         this.snackbar = true
+                        this.close()
                     })
+                .catch( (errors) => {                    
+                        let errorList = errors.response.data.errors
+                                        
+                        this.messages = [];                                         
+                        for(let error in errorList){
+                        
+                            this.color = 'error'
+                            this.messages.push(errorList[error][0])
+                            this.snackbar = true
+                        }                        
+                })
             },
             destroyItem () {
                 this.$http.delete(this.endPoint + '/' + this.itemToBeDeleted).then( data => {
                         console.log(data)
                         //this.items.push(data.data)
                         this.color = 'success'
-                        this.message = "Item deletado com sucesso"
+                        this.messages = [];
+                        this.messages.push("Item deletado com sucesso")
                         this.snackbar = true
                         this.items.splice(this.itemToBeDeletedIndex, 1)
                         

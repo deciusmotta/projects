@@ -5,8 +5,8 @@
     endPoint='/user' 
     newItemText="Novo Usuário"
     :fields="fields"
-    :editedItem="editedItem"
-    :defaultItem="defaultItem"
+    :editedItemProp="editedItem"
+    :defaultItemProp="defaultItem"
     >
     </crud>
 </template>
@@ -27,7 +27,7 @@
                     {name: 'id', label: 'Id', type: 'Number', showInTable: true}, 
                     {name: 'name', label: 'Nome', type: 'String', showInTable: true},
                     {name: 'email', label: 'E-mail', type: 'String', showInTable: true},
-                    {name: 'password', label: 'Senha', type: 'String', showInTable: false},
+                    {name: 'password', label: 'Senha', type: 'Password', showInTable: false},
                 ],
                 editedItem: {
                     name: '',
